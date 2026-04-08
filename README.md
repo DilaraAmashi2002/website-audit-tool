@@ -16,9 +16,6 @@ Paste any URL → get instant analysis:
 
 ---
 
-## Architecture Overview
-
-
 
 ## Architecture Overview
 
