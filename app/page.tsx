@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ScrapedMetrics } from "@/lib/scraper";
-import { AIAnalysis, PromptLog } from "@/lib/ai";
+import { ScrapedMetrics } from "../lib/scraper";
+import { AIAnalysis, PromptLog } from "../lib/ai";
 
 interface AuditResult {
   metrics: ScrapedMetrics;
