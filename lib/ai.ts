@@ -1,7 +1,7 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 import { ScrapedMetrics } from "./scraper";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export interface Recommendation {
   priority: number;
@@ -93,18 +93,23 @@ Provide 3-5 recommendations ordered by priority (1 = most impactful).`;
     page_content_sample: metrics.pageContent,
   };
 
-  const userPrompt = `${systemPrompt}
-
-Audit this webpage and return your analysis as JSON.
+  const userPrompt = `Audit this webpage and return your analysis as JSON.
 
 STRUCTURED METRICS INPUT:
 ${JSON.stringify(structuredInput, null, 2)}
 
 Generate specific, metric-grounded insights for all 5 sections and 3-5 prioritized recommendations.`;
 
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-  const result = await model.generateContent(userPrompt);
-  const rawModelOutput = result.response.text();
+  const response = await client.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    max_tokens: 2000,
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ],
+  });
+
+  const rawModelOutput = response.choices[0]?.message?.content || "";
 
   const cleaned = rawModelOutput
     .replace(/^```json\s*/i, "")
@@ -119,7 +124,7 @@ Generate specific, metric-grounded insights for all 5 sections and 3-5 prioritiz
     userPrompt,
     structuredInput,
     rawModelOutput,
-    model: "gemini-1.5-flash",
+    model: "llama-3.3-70b-versatile",
     timestamp: new Date().toISOString(),
   };
 
