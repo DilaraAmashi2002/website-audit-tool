@@ -16,21 +16,25 @@ Paste any URL → get instant analysis:
 
 ---
 
+
+
+```markdown
 ## Architecture Overview
 
+```
 User types URL
-↓
+      ↓
 Next.js API Route (/api/audit)
-↓
+      ↓                    ↓
 lib/scraper.ts          lib/ai.ts
-(Axios + Cheerio)       (Groq AI)
+(Axios + Cheerio)       (Groq / Llama 3.3)
 extracts metrics   →    analyzes metrics
-↓
+      ↓
 Frontend displays:
-01 Factual Metrics
-02 AI Insights
-03 Recommendations
-04 Prompt Logs
+  01 — Factual Metrics
+  02 — AI Insights  
+  03 — Recommendations
+  04 — Prompt Logs
 
 **Key principle**: Scraper runs first and returns clean typed data. The AI never sees raw HTML — only structured JSON metrics. This makes the AI focus on analysis, not extraction.
 
