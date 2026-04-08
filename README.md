@@ -6,8 +6,8 @@ AI-powered webpage auditor for SEO, UX, and conversion insights.
 
 **GitHub**: https://github.com/DilaraAmashi2002/website-audit-tool
 
-https://github.com/DilaraAmashi2002/website-audit-tool/blob/main/assets/website-audit-tool-journey.drawio.png
----
+**Project Journey** : https://github.com/DilaraAmashi2002/website-audit-tool/blob/main/assets/website-audit-tool-journey.drawio.png
+
 
 ## What It Does
 
