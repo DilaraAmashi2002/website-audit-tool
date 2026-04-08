@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { scrapeUrl } from "../../../lib/scraper";
 import { analyzeWithAI } from "../../../lib/ai";
-
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {

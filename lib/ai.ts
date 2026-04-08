@@ -1,7 +1,9 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { ScrapedMetrics } from "./scraper";
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+const apiKey = process.env.ANTHROPIC_API_KEY;
+console.log("API KEY FOUND:", !!apiKey);
+const client = new Anthropic({ apiKey });
 
 export interface Recommendation {
   priority: number;
