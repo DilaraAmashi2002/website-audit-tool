@@ -1,9 +1,7 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ScrapedMetrics } from "./scraper";
 
-const apiKey = process.env.ANTHROPIC_API_KEY;
-console.log("API KEY FOUND:", !!apiKey);
-const client = new Anthropic({ apiKey });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export interface Recommendation {
   priority: number;
@@ -95,22 +93,18 @@ Provide 3-5 recommendations ordered by priority (1 = most impactful).`;
     page_content_sample: metrics.pageContent,
   };
 
-  const userPrompt = `Audit this webpage and return your analysis as JSON.
+  const userPrompt = `${systemPrompt}
+
+Audit this webpage and return your analysis as JSON.
 
 STRUCTURED METRICS INPUT:
 ${JSON.stringify(structuredInput, null, 2)}
 
 Generate specific, metric-grounded insights for all 5 sections and 3-5 prioritized recommendations.`;
 
-  const response = await client.messages.create({
-    model: "claude-sonnet-4-20250514",
-    max_tokens: 2000,
-    system: systemPrompt,
-    messages: [{ role: "user", content: userPrompt }],
-  });
-
-  const rawModelOutput =
-    response.content[0].type === "text" ? response.content[0].text : "";
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const result = await model.generateContent(userPrompt);
+  const rawModelOutput = result.response.text();
 
   const cleaned = rawModelOutput
     .replace(/^```json\s*/i, "")
@@ -125,7 +119,7 @@ Generate specific, metric-grounded insights for all 5 sections and 3-5 prioritiz
     userPrompt,
     structuredInput,
     rawModelOutput,
-    model: "claude-sonnet-4-20250514",
+    model: "gemini-1.5-flash",
     timestamp: new Date().toISOString(),
   };
 
